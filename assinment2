@@ -1,0 +1,42 @@
+<?php
+
+$con = mysqli_connect('localhost' , 'root' , '' , 'codeflix');
+mysqli_select_db($con , "codeflix");
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST['name'])&& isset($_POST['age'])&& isset($_POST['email'])&& isset($_POST['city'])) {
+            $name = test_input($_POST['name']);
+            $age = test_input($_POST['age']);
+            $email = test_input($_POST['email']);
+            $city = test_input($_POST['city']);
+            if (empty($name)|| empty($age)|| empty($email)|| empty($city)) {
+                echo "No field should be left blank !..";
+            }
+            elseif ($age <10 || $age >30) {
+                echo("age is not coorect");
+            }
+            if(strpos($email,"@") === false){    
+                echo "your email Not valid !.. ";    
+            }
+            else {
+
+                mysqli_query($con , "INSERT INTO login VALUES('','$name','$age','$email','$city')");
+            }
+        }
+}
+?>
+
+
+<form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
+    Name :<input type="text" name = "name"><br><br>
+    Age : <input type="number" name="age"><br><br>
+    Email : <input type="text" name="email"><br><br>
+    City : <input type="text" name = "city"><br><br>
+    <input type="submit" value="send">
+    
+</form>
